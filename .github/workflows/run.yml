@@ -13,7 +13,7 @@ jobs:
           - all
           - news
     env:
-      USER_AGENT: Reddit Downloader: 0.1a - Hi. I'm sorry.
+      USER_AGENT: "Reddit Downloader: 0.1a - Hi. I'm sorry."
       OUTPUT_PATH: /tmp/output.rss
     steps:
       - uses: actions/checkout@v2
