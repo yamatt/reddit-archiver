@@ -1,0 +1,37 @@
+---
+name: Run
+on:
+  schedule:
+    - cron: "17 * * * *"
+
+jobs:
+  test-lambda:
+    runs-on: Ubuntu-20.04
+    strategy:
+      matrix:
+        subreddit:
+          - all
+          - news
+    env:
+      USER_AGENT: Reddit Downloader: 0.1a - Hi. I'm sorry.
+      OUTPUT_PATH: /tmp/output.rss
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: |
+          python3 -m pip install -r requirements.txt
+      - name: Create key name output
+        id: key
+        run: echo "::set-output name=date::$(date +'%Y/%m/%d/%H%M')"
+      - name: Run archiver
+        run: curl -H "User-Agent: ${{ env.USER_AGENT }}" "https://www.reddit.com/r/${{matrix.subreddit}}/.rss" -o ${{ env.OUTPUT_PATH }}
+      - uses: yamatt/backblaze-b2-upload-action@v6
+        with:
+          key_id: ${{ secrets.B2_KEY_ID }}
+          application_key: ${{ secrets.B2_APPLICATION_KEY }}
+          bucket_name: ${{ secrets.B2_BUCKET_NAME }}
+          file_path: ${{ env.OUTPUT_PATH }}
+          remote_path: "${{matrix.subreddit}}/${{ steps.key.outputs.date }}.rss"
