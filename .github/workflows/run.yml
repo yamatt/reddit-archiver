@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-lambda:
+  reddit-archiver:
     runs-on: Ubuntu-20.04
     strategy:
       matrix:
