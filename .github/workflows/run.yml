@@ -21,7 +21,7 @@ jobs:
         id: key
         run: echo "::set-output name=date::$(date +'%Y/%m/%d/%H%M')"
       - name: Run archiver
-        run: "curl -H \"User-Agent: ${{ env.USER_AGENT }}\" \"https://www.reddit.com/r/${{matrix.subreddit}}/.rss\" -o ${{ env.OUTPUT_PATH }}"
+        run: "curl -H \"User-Agent\: ${{ env.USER_AGENT }}\" \"https\://www.reddit.com/r/${{matrix.subreddit}}/.rss\" -o ${{ env.OUTPUT_PATH }}"
       - uses: yamatt/backblaze-b2-upload-action@v6
         with:
           key_id: ${{ secrets.B2_KEY_ID }}
